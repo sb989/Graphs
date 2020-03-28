@@ -44,11 +44,18 @@ public class Main
     return r;
   }
 
+  ArrayList<Node> BFTIterLinkedList(final Graph graph)
+  {
+    ArrayList<Node> r=  GraphSearch.BFTIter(graph);
+    System.out.println("done traversing graph iteratively");
+    return r;
+  }
   public static void main(String []args)
   {
     Main m = new Main();
-    Graph g = m.createLinkedList(2000);
-    ArrayList<Node> r = m.BFTRecLinkedList(g);
+    Graph g = m.createLinkedList(1000000);
+    //ArrayList<Node> r = m.BFTRecLinkedList(g);
+    ArrayList<Node> r = m.BFTIterLinkedList(g);
     r.forEach(n->System.out.println(n.nodeVal));
   }
 }
