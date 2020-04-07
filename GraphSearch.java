@@ -17,7 +17,7 @@ public class GraphSearch
     visited.add(start);
     for(int i = 0;i<start.adj.size();i++)
     {
-      Node s = start.adj.get(i);
+      Node s = start.getNeighbor(i);
       if(!visited.contains(s))
       {
         ret.addAll(DFSRec(s,end));
@@ -55,10 +55,10 @@ public class GraphSearch
       }
       for(int i =0;i < curr.adj.size();i++)
       {
-        if(!visited.contains(curr.adj.get(i)))
+        if(!visited.contains(curr.getNeighbor(i)))
         {
           s.push(curr);
-          curr = curr.adj.get(i);
+          curr = curr.getNeighbor(i);
           visited.add(curr);
           ret.add(curr);
           continue;
@@ -88,11 +88,11 @@ public class GraphSearch
     ArrayList<Node>neighbor = new ArrayList<Node>();
     for(int i=0;i<n.adj.size();i++)
     {
-      if(!visited.contains(n.adj.get(i)))
+      if(!visited.contains(n.getNeighbor(i)))
       {
-        visited.add(n.adj.get(i));
-        neighbor.add(n.adj.get(i));
-        ret.add(n.adj.get(i));
+        visited.add(n.getNeighbor(i));
+        neighbor.add(n.getNeighbor(i));
+        ret.add(n.getNeighbor(i));
       }
     }
     for(int i = 0;i<neighbor.size();i++)
@@ -127,11 +127,11 @@ public class GraphSearch
     {
       for(int i=0;i<curr.adj.size();i++)
       {
-        if(!visited.contains(curr.adj.get(i)))
+        if(!visited.contains(curr.getNeighbor(i)))
         {
-          visited.add(curr.adj.get(i));
-          neighbor.add(curr.adj.get(i));
-          ret.add(curr.adj.get(i));
+          visited.add(curr.getNeighbor(i));
+          neighbor.add(curr.getNeighbor(i));
+          ret.add(curr.getNeighbor(i));
         }
       }
       if(neighbor.isEmpty())

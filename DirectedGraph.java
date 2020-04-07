@@ -1,14 +1,14 @@
 import java.util.*;
-public class Graph
+public class DirectedGraph
 {
 
-  ArrayList<Node> adjList;
+  ArrayList <Node> adjList;
   int count;
 
-  Graph()
+  DirectedGraph()
   {
-    this.adjList = new ArrayList<Node>();
-    this.count = 0;
+      this.adjList = new ArrayList<Node>();
+      this.count = 0;
   }
 
   Node getNode(int ind)
@@ -42,20 +42,16 @@ public class Graph
     this.count --;
   }
 
-  void addUndirectedEdge(final Node first,final Node second)
+  void addDirectedEdge(final Node first,final Node second)//first points to second
   {
     int f = (first.getIndex());
-    int s = (second.getIndex());
     (this.adjList.get(f)).addUnweightedEdge(second);
-    (this.adjList.get(s)).addUnweightedEdge(first);
   }
 
-  void removeUndirectedEdge(final Node first,final Node second)
+  void removeDirectedEdge(final Node first,final Node second)
   {
     int f = (first.getIndex());
-    int s = (second.getIndex());
     (this.adjList.get(f)).removeEdge(second);
-    (this.adjList.get(s)).removeEdge(first);
   }
 
   HashSet<Node> getAllNodes()
@@ -64,5 +60,18 @@ public class Graph
     this.adjList.forEach((n)-> ret.add(n));
     return ret;
   }
+
+  Boolean hasLeaf()
+  {
+    for(int i = 0;i<adjList.size();i++)
+    {
+      if((adjList.get(i)).isLeaf())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
 }
