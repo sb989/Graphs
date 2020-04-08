@@ -165,4 +165,133 @@ public class MainFunctions
     return smallest;
   }
 
+  ArrayList<GridNode> astar(final GridNode sourceNode,final GridNode destNode)
+  {
+    HashMap<GridNode,Integer> a = new HashMap <GridNode,Integer>();
+    HashMap<GridNode,GridNode> parent = new HashMap<GridNode,GridNode>();
+    a.put(sourceNode,0+manhattanDistance(sourceNode,destNode));
+    GridNode curr = sourceNode;
+    ArrayList<GridNode> visited = new ArrayList<GridNode>();
+    while(true)
+    {
+      if(visited.contains(destNode))
+        break;
+      if(visited.contains(curr))
+      {
+        System.out.println(visited.size()+" "+a.size());
+        break;
+      }
+      if(!visited.contains(curr))
+        visited.add(curr);
+      for(int i =0;i<curr.adj.size();i++)
+      {
+        GridNode gn = curr.adj.get(i);
+        int dist = a.get(curr)+1;//manhattanDistance(gn,destNode);
+        if(!visited.contains(curr.adj.get(i)))
+        {
+          if(!a.containsKey(gn))
+          {
+            a.put(gn,dist);
+            parent.put(gn,curr);
+          }
+          else if(dist+manhattanDistance(gn,destNode) <a.get(gn)+manhattanDistance(gn,destNode))
+          {
+            a.replace(gn,dist);
+            parent.replace(gn,curr);
+          }
+        }
+      }
+      curr = findSmallestGridNode(a,visited,destNode);
+      if(curr == null)
+        break;
+    }
+    if(visited.contains(destNode))
+    {
+      System.out.println("creating return array");
+      ArrayList<GridNode> ret = new ArrayList<GridNode>();
+      ret.add(parent.get(destNode));
+      for(int gn = 0;gn<parent.size()-1;gn++)
+      {
+        GridNode temp = parent.get(ret.get(0));
+        ret.add(0,temp);
+        if(temp == sourceNode)
+          break;
+      }
+      ret.add(destNode);
+      //System.out.println("size of ret is "+ret.size());
+      return ret;
+    }
+    else
+      return null;
+  }
+
+  static int manhattanDistance(final GridNode sourceNode, final GridNode destNode)
+  {
+    int x = Math.abs(sourceNode.x-destNode.x);
+    int y = Math.abs(sourceNode.y-destNode.y);
+    return x+y;
+  }
+
+  public static GridNode findSmallestGridNode(HashMap<GridNode,Integer> a, ArrayList<GridNode> visited,GridNode destNode)
+  {
+    Object []nodes = ((a.keySet()).toArray());
+    GridNode smallest = (GridNode)nodes[0];
+    for(int i = 0;i<nodes.length;i++)
+    {
+      if(!visited.contains((GridNode)nodes[i]))
+        {
+          smallest = (GridNode)nodes[i];
+          break;
+        }
+      else if(visited.contains((GridNode)nodes[i]) && i==nodes.length-1)
+      {
+        return null;
+      }
+    }
+    for(int n = 0;n<nodes.length;n++)
+    {
+      if(a.get(nodes[n])+manhattanDistance((GridNode)nodes[n],destNode)<=a.get(smallest)+manhattanDistance(smallest,destNode) && !visited.contains(nodes[n]))
+      {
+        smallest = (GridNode)nodes[n];
+      }
+    }
+    return smallest;
+  }
+
+  GridGraph createRandomGridGraph(int n)
+  {
+    GridGraph gp = new GridGraph();
+    Random r = new Random();
+    for(int x = 0;x<n;x++)
+    {
+      for(int y = 0;y<n;y++)
+      {
+        gp.addGridNode(x,y,r.nextInt(n));
+      }
+    }
+    for(int x = 0;x<n;x++)
+    {
+      for(int y = 0;y<n;y++)
+      {
+        if(x!=0 && r.nextGaussian()>0)
+        {
+          gp.addUndirectedEdge(gp.getGridNode(x*n+y),gp.getGridNode((x-1)*n+y));//adds left grid node edge
+        }
+        if(x!=n-1 && r.nextGaussian()>0)
+        {
+          gp.addUndirectedEdge(gp.getGridNode(x*n+y),gp.getGridNode((x+1)*n+y));//adds right grid node edge
+        }
+        if(y!=0 && r.nextGaussian()>0)
+        {
+          gp.addUndirectedEdge(gp.getGridNode(x*n+y),gp.getGridNode(x*n+(y-1)));//adds up grid node edge
+        }
+        if(y!=n-1 && r.nextGaussian()>0)
+        {
+          gp.addUndirectedEdge(gp.getGridNode(x*n+y),gp.getGridNode(x*n+(y+1)));//adds down grid node edge
+        }
+      }
+    }
+    return gp;
+  }
+
 }

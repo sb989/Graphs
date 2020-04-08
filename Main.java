@@ -32,7 +32,21 @@ public class Main
     HashMap <Node,Integer> d = m.dijkstras(wg.getNode(0));
     for(Node n:d.keySet())
     {
-      System.out.println("the distance to "+n.nodeVal+" is "+d.get(n));
+      //System.out.println("the distance to "+n.nodeVal+" is "+d.get(n));
     }
+
+    GridGraph gg = m.createRandomGridGraph(100);
+    ArrayList<GridNode> astar = m.astar(gg.getGridNode(0),gg.getGridNode(9999));
+    if(astar != null)
+    {
+      for(int i =0;i<astar.size();i++)
+      {
+        GridNode a = astar.get(i);
+        System.out.println("("+a.x+","+a.y+")");
+      }
+    }
+
+    else
+      System.out.println("there is not path to the destination");
   }
 }

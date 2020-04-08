@@ -17,7 +17,7 @@ public class WeightedGraph
 
   void addNode(final int nodeVal)
   {
-    adjList.forEach(n-> n.setGraphSize(adjList.size()+1));
+    this.adjList.forEach(n->n.setGraphSize(adjList.size()+1));
     Node n = new Node(nodeVal,adjList.size()+1);
     n.setIndex(this.count);
     this.count++;
