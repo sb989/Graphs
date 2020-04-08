@@ -1,19 +1,40 @@
 import java.util.*;
 public class TopSort
 {
-  static ArrayList  <AbstractMap.SimpleEntry<Node,Integer>> inD = new ArrayList <AbstractMap.SimpleEntry<Node,Integer>>();
+  static int []inD;
   static ArrayList  <Node> visited = new ArrayList <Node>();
   static ArrayList  <Node> zeroD = new ArrayList <Node>();
+
+  public static void printNodeNieghbor(Node n)
+  {
+    System.out.print("Node "+n.nodeVal+" has neighbors:");
+    for(int i =0;i<n.adj.size();i++)
+    {
+      System.out.print(n.adj.get(i).getKey().nodeVal);
+      System.out.print(" ");
+    }
+    System.out.println("");
+  }
 
   public static ArrayList<Node> Kahns(final DirectedGraph graph)
   {
     ArrayList  <Node> ret= new ArrayList<Node>();
 
-    graph.adjList.forEach(n->inD.add(new AbstractMap.SimpleEntry<Node,Integer>(n,n.inDegree))); //creates pairs of all Nodes with their in degree value and puts them in inD
-    inD.forEach(n->addZeroDegreeNode(n)); // places all Nodes with in degree of 0 in zeroD
     Node n;
+    inD = new int[graph.adjList.size()];
+    Arrays.fill(inD,0);
+    for(int i =0;i<graph.adjList.size();i++)
+    {
+      n = graph.adjList.get(i);
+      n.adj.forEach(x->inD[x.getKey().ind]++);
+    }
+    for(int i = 0;i<graph.adjList.size();i++)
+    {
+      if(inD[i] == 0)
+        zeroD.add(graph.adjList.get(i));
+    } // places all Nodes with in degree of 0 in zeroD
+
     AbstractMap.SimpleEntry<Node,Integer> p;
-    inD.forEach(x->System.out.println("the degrees are "+x.getValue()));
     while(zeroD.size() != 0) // repeats while zeroD is not empty
     {
       for(int i = 0;i<zeroD.size();i++)
@@ -21,22 +42,23 @@ public class TopSort
         n = zeroD.get(i);
         KahnsUtil(n);
       }
-
     }
-    if(visited.size() != inD.size())
+    if(visited.size() != graph.adjList.size())
     {
-      System.out.println("visiteds size is "+visited.size()+" inDs size is "+inD.size());
-      inD.clear();
+      System.out.println("visiteds size is "+visited.size()+" inDs size is "+inD.length);
       visited.clear();
       zeroD.clear();
+      inD = null;
+      System.gc();
       return null;
     }
     else
     {
       ret.addAll(visited);
-      inD.clear();
       visited.clear();
       zeroD.clear();
+      inD = null;
+      System.gc();
       return ret;
     }
 
@@ -57,51 +79,66 @@ public class TopSort
       if(!zeroD.contains(neighbor))
       {
         changeDegreeValue(neighbor,-1);
-        if(getNodeDegree(neighbor) == 0)
+        if(inD[neighbor.ind] == 0)
         {
           zeroD.add(neighbor);
         }
       }
-
     }
-
-  }
-
-  static void addZeroDegreeNode(AbstractMap.SimpleEntry<Node,Integer> n)
-  {
-    if((n.getValue() == 0))
-      zeroD.add(n.getKey());
-  }
-
-  static int getNodeDegree(Node n)
-  {
-    int count = inD.size();
-    for(int i = 0;i<count;i++)
-    {
-      if((inD.get(i)).getKey() == n)
-      {
-        return (inD.get(i)).getValue();
-      }
-    }
-    return -1;
   }
 
   static void changeDegreeValue(Node n,int change)
   {
-    int degree,count;
-    AbstractMap.SimpleEntry <Node,Integer> p;
-    count = inD.size();
-    degree = -change;
-    for(int i = 0;i<count;i++)
+    inD[n.ind]+= change;
+  }
+
+  static ArrayList <Node> mDFS(final DirectedGraph graph)
+  {
+    Stack<Integer>neigh = new Stack<Integer>();
+    Stack<Integer>ret = new Stack<Integer>();
+    ArrayList<Node>r = new ArrayList<Node>();
+    Stack<Integer>parent = new Stack<Integer>();
+    Boolean []v = new Boolean[graph.adjList.size()];
+    Arrays.fill(v,Boolean.FALSE);
+    int i;
+    Node curr;
+    Node neighbor;
+    for(int k = 0;k<graph.adjList.size();k++)
     {
-      p = inD.get(i);
-      if(p.getKey() == n)
+      neigh.push(k);
+      while(!neigh.empty())
       {
-        degree = p.getValue();
-        inD.remove(i);
-        break;
+          i = neigh.pop();
+          curr = graph.adjList.get(i);
+          if(!v[i])
+          {
+            v[i] = true;
+            r.add(curr);
+          }
+          for(int nn = 0;nn<curr.adj.size();nn++)
+          {
+            int ind = curr.adj.get(nn).getKey().ind;
+            if(!v[ind])
+            {
+              neigh.push(ind);
+            }
+          }
       }
     }
-    inD.add(new AbstractMap.SimpleEntry<Node,Integer>(n,degree+change));
+
+    if(r.size() != graph.adjList.size())
+    {
+      System.out.println("adjList size is "+graph.adjList.size()+" rets size is "+ret.size());
+      return null;
+    }
+    /*while(!ret.empty())
+    {
+      r.add(graph.adjList.get(ret.pop()));
+    }*/
+    return r;
+
+
   }
+
+
 }

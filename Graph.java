@@ -18,7 +18,8 @@ public class Graph
 
   void addNode(final int nodeVal)
   {
-    Node n = new Node(nodeVal);
+    adjList.forEach(n-> n.setGraphSize(adjList.size()+1));
+    Node n = new Node(nodeVal,adjList.size()+1);
     n.setIndex(this.count);
     this.count++;
     this.adjList.add(n);
@@ -28,7 +29,7 @@ public class Graph
   {
     int ind = first.getIndex();
     Node n;
-    for(int i =-0;i<ind;i++)
+    for(int i =0;i<ind;i++)
     {
       (this.adjList.get(i)).removeEdge(first);
     }

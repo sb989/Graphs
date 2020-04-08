@@ -5,14 +5,25 @@ public class Node
   ArrayList<AbstractMap.SimpleEntry<Node,Integer>> adj;
   int ind;
   int inDegree;
+  int graph_size;
 
-
-  Node(int n)
+  Node(int n,int g_size)
   {
     this.nodeVal = n;
     this.adj = new ArrayList<>();
     this.ind = 0;
     this.inDegree = 0;
+    this.graph_size = g_size;
+  }
+
+  int getGraphSize()
+  {
+    return this.graph_size;
+  }
+
+  void setGraphSize(int g_size)
+  {
+    this.graph_size = g_size;
   }
 
   void setIndex(int ind)
@@ -35,8 +46,8 @@ public class Node
         this.adj.remove(i);
         return;
       }
-
     }
+    n.inDegree -= 1;
   }
 
   void addEdge(Node n,int weight)

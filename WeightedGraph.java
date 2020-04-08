@@ -1,11 +1,10 @@
 import java.util.*;
-public class DirectedGraph
+public class WeightedGraph
 {
-
   ArrayList <Node> adjList;
   int count;
 
-  DirectedGraph()
+  WeightedGraph()
   {
       this.adjList = new ArrayList<Node>();
       this.count = 0;
@@ -43,13 +42,13 @@ public class DirectedGraph
     this.count --;
   }
 
-  void addDirectedEdge(final Node first,final Node second)//first points to second
+  void addWeightedEdge(final Node first,final Node second,final int edgeWeight)//first points to second
   {
     int f = (first.getIndex());
-    (this.adjList.get(f)).addUnweightedEdge(second);
+    (this.adjList.get(f)).addWeightedEdge(second,edgeWeight);
   }
 
-  void removeDirectedEdge(final Node first,final Node second)
+  void removeWeightedEdge(final Node first,final Node second)
   {
     int f = (first.getIndex());
     (this.adjList.get(f)).removeEdge(second);
@@ -73,6 +72,4 @@ public class DirectedGraph
     }
     return false;
   }
-
-
 }
